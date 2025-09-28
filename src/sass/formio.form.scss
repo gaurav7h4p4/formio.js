@@ -990,6 +990,37 @@ body.formio-dialog-open {
   // }
 }
 
+.tanstack-datagrid-table {
+  position: relative;
+
+  .tanstack-datagrid-header {
+    position: relative;
+    padding-right: 12px;
+  }
+
+  .tanstack-datagrid-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+  }
+
+  .tanstack-datagrid-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+  }
+
+  .tanstack-datagrid-cell {
+    vertical-align: middle;
+  }
+}
+
 .datagrid-table {
   &>tbody>tr>td {
     word-break: auto-phrase;

@@ -6,16 +6,28 @@
   {% if (ctx.hasHeader) { %}
   <thead>
     <tr>
-      {% if (ctx.component.reorder) { %}<th></th>{% } %}
-      {% ctx.headerCells.forEach(function(cell) { %}
-        <th class="{{cell.component.validate && cell.component.validate.required ? 'field-required' : ''}}"
-            data-tanstack-column-id="{{cell.id}}">
-          {{ cell.component.hideLabel ? '' : ctx.t(cell.text, { _userInput: true }) }}
-          {% if (cell.component.tooltip) { %} <i ref="tooltip" tabindex="0" data-title="{{cell.component.tooltip}}" class="{{ctx.iconClass('question-sign')}} text-muted" data-tooltip="{{cell.component.tooltip}}"></i>{% } %}
+      {% if (ctx.component.reorder) { %}<th class="tanstack-datagrid-reorder-header"></th>{% } %}
+      {% ctx.columnMetadata.forEach(function(meta) { %}
+        <th
+          class="tanstack-datagrid-header {{meta.component && meta.component.validate && meta.component.validate.required ? 'field-required' : ''}}"
+          data-tanstack-column-id="{{meta.id}}"
+          data-tanstack-header-id="{{meta.headerId}}"
+          {% if (meta.size) { %}style="width: {{meta.size}}px"{% } %}>
+          <div class="tanstack-datagrid-header-inner">
+            <span>
+              {{ meta.component && meta.component.hideLabel ? '' : ctx.t(meta.text, { _userInput: true }) }}
+              {% if (meta.component && meta.component.tooltip) { %}
+                <i ref="tooltip" tabindex="0" data-title="{{meta.component.tooltip}}" class="{{ctx.iconClass('question-sign')}} text-muted" data-tooltip="{{meta.component.tooltip}}"></i>
+              {% } %}
+            </span>
+          </div>
+          {% if (meta.canResize) { %}
+            <span class="tanstack-datagrid-resize-handle" data-tanstack-resize-handle data-tanstack-header-id="{{meta.headerId}}"></span>
+          {% } %}
         </th>
       {% }) %}
       {% if (ctx.hasExtraColumn) { %}
-      <th>
+      <th class="tanstack-datagrid-actions-header">
         <span class="sr-only">{{ ctx.t('Add/Remove') }}</span>
         {% if (!ctx.builder && ctx.hasAddButton && ctx.hasTopSubmit) { %}
         <!-- TODO: revisit TanStack add-row UX -->
@@ -40,18 +52,22 @@
     {% } %}
     <tr ref="{{ctx.datagridKey}}-row" data-tanstack-row-id="{{row.id}}">
       {% if (ctx.component.reorder) { %}
-        <td class="col-md-1">
+        <td class="col-md-1 tanstack-datagrid-reorder-cell">
           <button type="button" class="formio-drag-button btn btn-default fa fa-bars" data-key="{{ctx.datagridKey}}"></button>
         </td>
       {% } %}
-      {% ctx.columns.forEach(function(col) { %}
-        <td ref="{{ctx.datagridKey}}" data-tanstack-column-id="{{col.key}}" {% if (col.key && col.overlay && col.overlay.width) { %} style="width: {{col.overlay.width + 'px'}}"{% } %} >
-          {{row.cells[col.key]}}
+      {% ctx.columnMetadata.forEach(function(meta) { %}
+        <td
+          ref="{{ctx.datagridKey}}"
+          data-tanstack-column-id="{{meta.id}}"
+          class="tanstack-datagrid-cell"
+          {% if (meta.size) { %}style="width: {{meta.size}}px"{% } %}>
+          {{ meta.key ? row.cells[meta.key] : '' }}
         </td>
       {% }) %}
       {% if (ctx.hasExtraColumn) { %}
         {% if (ctx.hasRemoveButtons) { %}
-        <td class="col-md-1">
+        <td class="col-md-1 tanstack-datagrid-actions-cell">
           <!-- TODO: revisit TanStack remove-row UX -->
           <button type="button" class="btn btn-secondary formio-button-remove-row" ref="{{ctx.datagridKey}}-removeRow" tabindex="{{ctx.tabIndex}}" aria-label="{{ctx.t('remove')}}">
             <i class="{{ctx.iconClass('remove-circle')}}"></i>
