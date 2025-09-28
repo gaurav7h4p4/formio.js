@@ -390,6 +390,10 @@ export default class TanstackDataGridComponent extends DataGridComponent {
   }
 
   getColumns() {
+    if (!this.tanstackState || typeof this.tanstackState !== 'object') {
+      this.tanstackState = this.getDefaultTanstackState();
+    }
+
     const columns = super.getColumns();
     const order = Array.isArray(this.tanstackState.columnOrder) ? this.tanstackState.columnOrder : [];
 
