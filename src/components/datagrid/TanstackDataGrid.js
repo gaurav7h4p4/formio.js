@@ -79,6 +79,10 @@ export default class TanstackDataGridComponent extends DataGridComponent {
         : [];
     }
 
+    if (!this.visibleColumns || typeof this.visibleColumns !== 'object') {
+      this.visibleColumns = {};
+    }
+
     this.visibleColumnComponents = Array.isArray(this.columns) ? this.getColumns() : [];
     const columns = this.visibleColumnComponents.map((component, columnIndex) => ({
       id: component.key || `column-${columnIndex}`,
