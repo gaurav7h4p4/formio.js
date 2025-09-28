@@ -16,6 +16,7 @@ import components from './components';
 import tableComponents from './tableComponents';
 import container from './container';
 import datagrid from './datagrid';
+import tanstackDatagrid from './tanstackDatagrid';
 import day from './day';
 import dialog from './dialog';
 import editgrid from './editgrid';
@@ -95,6 +96,7 @@ export default {
   tableComponents,
   container,
   datagrid,
+  tanstackDatagrid,
   day,
   dialog,
   editgrid,

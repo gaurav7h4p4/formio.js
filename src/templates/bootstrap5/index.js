@@ -3,6 +3,7 @@ import builderSidebarGroup from './builderSidebarGroup';
 import builderWizard from './builderWizard';
 import componentModal from './componentModal';
 import datagrid from './datagrid';
+import tanstackDatagrid from './tanstackDatagrid';
 import dialog from './dialog';
 import file from './file';
 import input from './input';
@@ -28,6 +29,7 @@ export default {
   builderWizard,
   componentModal,
   datagrid,
+  tanstackDatagrid,
   dialog,
   file,
   input,

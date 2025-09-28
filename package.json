@@ -63,6 +63,7 @@
     "@formio/semantic": "2.6.1",
     "@formio/text-mask-addons": "^3.8.0-formio.4",
     "@formio/vanilla-text-mask": "^5.1.1-formio.1",
+    "@tanstack/table-core": "^8.21.3",
     "abortcontroller-polyfill": "^1.7.5",
     "autocompleter": "^7.0.1",
     "browser-cookies": "^1.2.0",

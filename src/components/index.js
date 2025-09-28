@@ -9,6 +9,7 @@ import ContentComponent from './content/Content';
 import CurrencyComponent from './currency/Currency';
 import DataGridComponent from './datagrid/DataGrid';
 import DataMapComponent from './datamap/DataMap';
+import TanstackDataGridComponent from './datagrid/TanstackDataGrid';
 import DateTimeComponent from './datetime/DateTime';
 import DayComponent from './day/Day';
 import EditGridComponent from './editgrid/EditGrid';
@@ -59,6 +60,7 @@ export default {
   content: ContentComponent,
   currency: CurrencyComponent,
   datagrid: DataGridComponent,
+  tanstackDatagrid: TanstackDataGridComponent,
   datamap: DataMapComponent,
   datetime: DateTimeComponent,
   day: DayComponent,

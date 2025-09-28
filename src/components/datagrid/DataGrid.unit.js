@@ -6,6 +6,10 @@ import Harness from '../../../test/harness';
 import DataGridComponent from './DataGrid';
 import Formio from '../../Formio';
 
+const ActiveDataGridComponent = global.__formioActiveComponent__ || DataGridComponent;
+const fixtureTransform = global.__formioFixtureTransform__ || ((fixture) => fixture);
+const asFixture = (fixture) => fixtureTransform(_.cloneDeep(fixture));
+
 import {
   comp1,
   comp2,
@@ -28,7 +32,7 @@ import {
 
 describe('DataGrid Component', () => {
   it('Test modal edit confirmation dialog', (done) => {
-    Harness.testCreate(DataGridComponent, comp5).then((component) => {
+    Harness.testCreate(ActiveDataGridComponent, asFixture(comp5)).then((component) => {
       component.componentModal.openModal();
       const fakeEvent = {
         preventDefault: () => {}
@@ -53,7 +57,7 @@ describe('DataGrid Component', () => {
 
   it(`Should show alert message in modal edit, when clicking on modal overlay and value was changed,
     and clear values when pushing 'yes, delete it' in alert container`, (done) => {
-    Harness.testCreate(DataGridComponent, comp4).then((component) => {
+    Harness.testCreate(ActiveDataGridComponent, asFixture(comp4)).then((component) => {
       const hiddenModalWindow = component.element.querySelector('.component-rendering-hidden');
       assert.equal(!!hiddenModalWindow, true);
 
@@ -106,13 +110,13 @@ describe('DataGrid Component', () => {
   });
 
   it('Should build a data grid component', () => {
-    return Harness.testCreate(DataGridComponent, comp1).then((component) => {
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp1)).then((component) => {
       Harness.testElements(component, 'input[type="text"]', 3);
     });
   });
 
   it('Should build a data grid component with formio-component-datagrid class property', done => {
-    Harness.testCreate(DataGridComponent, comp6).then((component) => {
+    Harness.testCreate(ActiveDataGridComponent, asFixture(comp6)).then((component) => {
       const element = component.element.component.components[0].element;
       setTimeout(() => {
         assert.deepEqual(element.className.includes('formio-component-datagrid'), true);
@@ -123,7 +127,7 @@ describe('DataGrid Component', () => {
   });
 
   it('Should not skip validation on input nested components', done => {
-    Harness.testCreate(DataGridComponent, comp1)
+    Harness.testCreate(ActiveDataGridComponent, asFixture(comp1))
       .then(cmp => {
         expect(cmp.shouldSkipValidation()).to.be.false;
         done();
@@ -132,7 +136,7 @@ describe('DataGrid Component', () => {
   });
 
   it('Should get and set values within the grid.', () => {
-    return Harness.testCreate(DataGridComponent, comp1).then((component) => {
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp1)).then((component) => {
       Harness.testSetGet(component, [
         {
           make: 'Jeep',
@@ -149,7 +153,7 @@ describe('DataGrid Component', () => {
   });
 
   it('Should be able to add another row.', () => {
-    return Harness.testCreate(DataGridComponent, comp1).then((component) => {
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp1)).then((component) => {
       Harness.testSetGet(component, [
         {
           make: 'Jeep',
@@ -174,7 +178,7 @@ describe('DataGrid Component', () => {
 
   it('Should allow provide default value', function(done) {
     try {
-      Harness.testCreate(DataGridComponent, withDefValue)
+      Harness.testCreate(ActiveDataGridComponent, asFixture(withDefValue))
         .then((datagrid) => {
           expect(datagrid.getValue()).to.deep.equal([
             { name: 'Alex', age: 1 },
@@ -191,7 +195,7 @@ describe('DataGrid Component', () => {
   });
 
   it('Should remove the corresponding row from the metadata when removing a row', (done) => {
-    Formio.createForm(document.createElement('div'), comp11)
+    Formio.createForm(document.createElement('div'), asFixture(comp11))
       .then((form) => {
         const datagrid = form.getComponent('dataGrid');
         const checkValue = (index, value) => {
@@ -222,7 +226,7 @@ describe('DataGrid Component', () => {
 
   it('Should allow provide default value in row-groups model', function(done) {
     try {
-      Harness.testCreate(DataGridComponent, withRowGroupsAndDefValue)
+      Harness.testCreate(ActiveDataGridComponent, asFixture(withRowGroupsAndDefValue))
         .then((datagrid) => {
           expect(datagrid.getValue()).to.deep.equal([
             { name: 'Alex', age: 1 },
@@ -241,7 +245,7 @@ describe('DataGrid Component', () => {
   });
 
   it('Should not cause setValue loops when logic within hidden component is set', function(done) {
-    Formio.createForm(document.createElement('div'), withLogic)
+    Formio.createForm(document.createElement('div'), asFixture(withLogic))
       .then((form) => {
         const datagrid = form.getComponent('dataGrid');
         const spyFunc = sinon.spy(datagrid, 'checkComponentConditions');
@@ -259,7 +263,7 @@ describe('DataGrid Component', () => {
   });
 
   it('Should collapse group rows on group header click', (done) => {
-    Formio.createForm(document.createElement('div'), withCollapsibleRowGroups)
+    Formio.createForm(document.createElement('div'), asFixture(withCollapsibleRowGroups))
       .then((form) => {
         const groupHeadersRefName= 'datagrid-dataGrid-group-header';
         const datagrid = form.getComponent('dataGrid');
@@ -286,12 +290,12 @@ describe('DataGrid Component', () => {
       const EDFG = 'Differ from number of rows in groups';
       const base = { type: 'datagrid', key: 'testkey' };
       let schema = _.cloneDeep(base);
-      let datagrid = new DataGridComponent(schema, {});
+      let datagrid = new ActiveDataGridComponent(schema, {});
 
       expect(datagrid.minLength, EIDV).to.equal(0);
 
       schema = Object.assign(_.cloneDeep(base), { validate: { minLength: 5 } });
-      datagrid = new DataGridComponent(schema, {});
+      datagrid = new ActiveDataGridComponent(schema, {});
       expect(datagrid.minLength, EDFC).to.equal(5);
 
       schema = Object.assign(_.cloneDeep(base), {
@@ -303,7 +307,7 @@ describe('DataGrid Component', () => {
           { label: 'M4', numberOfRows: 2 }
         ]
       });
-      datagrid = new DataGridComponent(schema, {});
+      datagrid = new ActiveDataGridComponent(schema, {});
       expect(datagrid.minLength, EDFG).to.equal(9);
 
       schema = Object.assign(_.cloneDeep(base), {
@@ -316,7 +320,7 @@ describe('DataGrid Component', () => {
           { label: 'M4', numberOfRows: 2 }
         ]
       });
-      datagrid = new DataGridComponent(schema, {});
+      datagrid = new ActiveDataGridComponent(schema, {});
       if (datagrid.minLength === 5) {
         expect.fail('Number of row should take precedence over config');
       }
@@ -328,7 +332,7 @@ describe('DataGrid Component', () => {
 
   describe('getGroupSizes', () => {
     it('should return array of numbers representing group sizes', () => {
-      const { getGroupSizes } = DataGridComponent.prototype;
+      const { getGroupSizes } = ActiveDataGridComponent.prototype;
       let self = { component: {} };
 
       expect(getGroupSizes.call(self)).to.deep.equal([]);
@@ -362,7 +366,7 @@ describe('DataGrid Component', () => {
       ));
     };
 
-    Formio.createForm(document.createElement('div'), withConditionalFieldsAndValidations)
+    Formio.createForm(document.createElement('div'), asFixture(withConditionalFieldsAndValidations))
       .then((form) => {
         const rootText = form.getComponent(['text']);
         rootText.setValue('Match', { modified: true });
@@ -433,11 +437,11 @@ describe('DataGrid Component', () => {
 
 describe('DataGrid Panels', () => {
   it('Should build a data grid component', () => {
-    return Harness.testCreate(DataGridComponent, comp2);
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp2));
   });
 
   it('Should be able to set the values of one panel in the DataGrid.', () => {
-    return Harness.testCreate(DataGridComponent, comp2).then((component) => {
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp2)).then((component) => {
       Harness.testSetGet(component, [
         {
           firstName: 'Joe',
@@ -462,7 +466,7 @@ describe('DataGrid Panels', () => {
 
   // Comp 7 Test
   it('Should have unique IDs inside data grid', () => {
-    return Harness.testCreate(DataGridComponent, comp7).then((component) => {
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp7)).then((component) => {
       component.addRow();
       const idArr = [];
       component.components.forEach((row, i) => {
@@ -474,10 +478,10 @@ describe('DataGrid Panels', () => {
 
   it('Should hide label in header for Button component when hideLabel is true.', () => {
     const formElement = document.createElement('div');
-    return Formio.createForm(formElement, {
+    return Formio.createForm(formElement, asFixture({
       display: 'form',
       components: [comp8]
-    })
+    }))
     .then(() => {
       assert.equal(formElement.getElementsByTagName('th')[0].textContent.trim(), '', 'Should hide a label');
       assert.equal(formElement.getElementsByTagName('th')[1].textContent.trim(), 'Text Field', 'Should show a label');
@@ -487,7 +491,7 @@ describe('DataGrid Panels', () => {
 
 describe('DataGrid disabling', () => {
   it('Child components should be disabled', () => {
-    return Harness.testCreate(DataGridComponent, comp3).then((component) => {
+    return Harness.testCreate(ActiveDataGridComponent, asFixture(comp3)).then((component) => {
       assert.equal(component.components.reduce((acc, child) => acc && child.parentDisabled, true), true);
     });
   });
@@ -496,10 +500,10 @@ describe('DataGrid disabling', () => {
 describe('DataGrid modal', () => {
   it('Should be highlighted in red when invalid', (done) => {
     const formElement = document.createElement('div');
-    Formio.createForm(formElement, {
+    Formio.createForm(formElement, asFixture({
       display: 'form',
       components: [modalWithRequiredFields]
-    })
+    }))
     .then((form) => {
       const data = {
         dataGrid: [
@@ -538,7 +542,7 @@ describe('DataGrid modal', () => {
 
 describe('DataGrid calculated values', () => {
   it('Should allow override calculated value', (done) => {
-    Formio.createForm(document.createElement('div'), withAllowCalculateOverride)
+    Formio.createForm(document.createElement('div'), asFixture(withAllowCalculateOverride))
       .then((form) => {
         const select = form.getComponent('select');
         const dataGrid = form.getComponent('dataGrid');
@@ -595,7 +599,7 @@ describe('DataGrid calculated values', () => {
   });
 
   it('Should not recalculate value after restoring to previous calculated value', (done) => {
-    Formio.createForm(document.createElement('div'), withAllowCalculateOverride)
+    Formio.createForm(document.createElement('div'), asFixture(withAllowCalculateOverride))
       .then((form) => {
         const select = form.getComponent('select');
         const dataGrid = form.getComponent('dataGrid');
@@ -647,7 +651,7 @@ describe('DataGrid calculated values', () => {
   });
 
   it('Should calculate value for several DataGrid components', (done) => {
-    Formio.createForm(document.createElement('div'), twoWithAllowCalculatedOverride)
+    Formio.createForm(document.createElement('div'), asFixture(twoWithAllowCalculatedOverride))
       .then((form) => {
         const select = form.getComponent('select');
         const dataGrid = form.getComponent('dataGrid');

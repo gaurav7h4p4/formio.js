@@ -146,7 +146,7 @@ export default class WebformBuilder extends Component {
 
     this.options.hooks.renderComponents = (html, { components, self }) => {
       // if Datagrid and already has a component, don't make it droppable.
-      if (self.type === 'datagrid' && components.length > 0 || self.noDragDrop) {
+      if ((self.type === 'datagrid' || self.type === 'tanstackDatagrid') && components.length > 0 || self.noDragDrop) {
         return html;
       }
 
@@ -198,7 +198,7 @@ export default class WebformBuilder extends Component {
       }
 
       // If this is an existing datagrid element, don't make it draggable.
-      if ((component.type === 'datagrid' || component.type === 'datamap') && components.length > 0) {
+      if ((component.type === 'datagrid' || component.type === 'tanstackDatagrid' || component.type === 'datamap') && components.length > 0) {
         return element;
       }
 
@@ -533,7 +533,7 @@ export default class WebformBuilder extends Component {
     }
 
     // Some components are their own namespace.
-    if (['address', 'container', 'datagrid', 'editgrid', 'dynamicWizard', 'tree'].includes(component.type) || component.tree || component.arrayTree) {
+    if (['address', 'container', 'datagrid', 'tanstackDatagrid', 'editgrid', 'dynamicWizard', 'tree'].includes(component.type) || component.tree || component.arrayTree) {
       return component.key;
     }
 
@@ -988,7 +988,7 @@ export default class WebformBuilder extends Component {
       parent.addChildComponent(info, element, target, source, sibling);
     }
 
-    const componentInDataGrid = parent.type === 'datagrid';
+    const componentInDataGrid = parent.type === 'datagrid' || parent.type === 'tanstackDatagrid';
 
     if (isNew && !this.options.noNewEdit && !info.noNewEdit && !(this.options.design && info.type === 'reviewpage')) {
       this.editComponent(info, target, isNew, null, null, { inDataGrid: componentInDataGrid });

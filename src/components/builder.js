@@ -51,6 +51,7 @@ Components.container.editForm = ContainerForm;
 Components.content.editForm = ContentForm;
 Components.currency.editForm = CurrencyForm;
 Components.datagrid.editForm = DataGridForm;
+Components.tanstackDatagrid.editForm = DataGridForm;
 Components.datamap.editForm = DataMapForm;
 Components.datetime.editForm = DateTimeForm;
 Components.day.editForm = DayForm;
