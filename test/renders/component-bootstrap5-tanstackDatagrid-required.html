@@ -1,0 +1,27 @@
+<div id="tanstackDataGrid" class="formio-form-group has-feedback formio-component formio-component-tanstackDatagrid formio-component-tanstackDataGrid  required" ref="component">
+  <label ref="label" class="col-form-label  field-required" for="tanstackDataGrid-tanstackDataGrid" id="l-tanstackDataGrid-tanstackDataGrid">
+    Data Grid
+  </label>
+  <table class="table datagrid-table table-bordered tanstack-datagrid-table
+    ">
+    <tbody ref="datagrid-tanstackDataGrid-tbody" data-key="datagrid-tanstackDataGrid">
+      <tr ref="datagrid-tanstackDataGrid-row">
+        <td class="tanstack-datagrid-actions-cell">
+          <button type="button" class="btn btn-secondary formio-button-remove-row" ref="datagrid-tanstackDataGrid-removeRow" tabindex="0" aria-label="remove">
+            <i class="fa fa-times-circle-o"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+          <button class="btn btn-primary formio-button-add-row" ref="datagrid-tanstackDataGrid-addRow" tabindex="0">
+            <i class="fa fa-plus"></i> Add Another
+          </button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  <div ref="messageContainer" class="formio-errors invalid-feedback"></div>
+</div>

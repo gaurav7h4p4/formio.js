@@ -62,8 +62,11 @@ export default class Components {
       comp = new Components.components[component.type](component, options, data);
     }
     else if (component.arrayTree) {
+      const arrayTreeType = component.type && Components.components[component.type]
+        ? component.type
+        : 'datagrid';
       // eslint-disable-next-line new-cap
-      comp = new Components.components['datagrid'](component, options, data);
+      comp = new Components.components[arrayTreeType](component, options, data);
     }
     else if (component.tree) {
       // eslint-disable-next-line new-cap

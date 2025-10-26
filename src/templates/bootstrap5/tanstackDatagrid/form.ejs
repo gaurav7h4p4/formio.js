@@ -1,0 +1,98 @@
+<table class="table datagrid-table table-bordered tanstack-datagrid-table
+    {{ ctx.component.striped ? 'table-striped' : ''}}
+    {{ ctx.component.hover ? 'table-hover' : ''}}
+    {{ ctx.component.condensed ? 'table-sm' : ''}}
+    " {% if (ctx.component.layoutFixed) { %}style="table-layout: fixed;"{% } %}>
+  {% if (ctx.hasHeader) { %}
+  <thead>
+    <tr>
+      {% if (ctx.component.reorder) { %}<th class="tanstack-datagrid-reorder-header"></th>{% } %}
+      {% ctx.columnMetadata.forEach(function(meta) { %}
+        <th
+          class="tanstack-datagrid-header {{meta.component && meta.component.validate && meta.component.validate.required ? 'field-required' : ''}}"
+          data-tanstack-column-id="{{meta.id}}"
+          data-tanstack-header-id="{{meta.headerId}}"
+          {% if (meta.size) { %}style="width: {{meta.size}}px"{% } %}>
+          <div class="tanstack-datagrid-header-inner">
+            <span>
+              {{ meta.component && meta.component.hideLabel ? '' : ctx.t(meta.text, { _userInput: true }) }}
+              {% if (meta.component && meta.component.tooltip) { %}
+                <i ref="tooltip" tabindex="0" data-title="{{meta.component.tooltip}}" class="{{ctx.iconClass('question-sign')}} text-muted" data-tooltip="{{meta.component.tooltip}}"></i>
+              {% } %}
+            </span>
+          </div>
+          {% if (meta.canResize) { %}
+            <span class="tanstack-datagrid-resize-handle" data-tanstack-resize-handle data-tanstack-header-id="{{meta.headerId}}"></span>
+          {% } %}
+        </th>
+      {% }) %}
+      {% if (ctx.hasExtraColumn) { %}
+      <th class="tanstack-datagrid-actions-header">
+        <span class="visually-hidden">{{ ctx.t('Add/Remove') }}</span>
+        {% if (!ctx.builder && ctx.hasAddButton && ctx.hasTopSubmit) { %}
+        <!-- TODO: revisit TanStack add-row UX -->
+        <button class="btn btn-primary formio-button-add-row" ref="{{ctx.datagridKey}}-addRow" tabindex="{{ctx.tabIndex}}">
+          <i class="{{ctx.iconClass('plus')}}"></i>{{ctx.t(ctx.component.addAnother || 'Add Another', { _userInput: true })}}
+        </button>
+        {% } %}
+      </th>
+      {% } %}
+    </tr>
+  </thead>
+  {% } %}
+  <tbody ref="{{ctx.datagridKey}}-tbody" data-key="{{ctx.datagridKey}}">
+    {% ctx.rows.forEach(function(row, index) { %}
+    {% if (ctx.hasGroups && ctx.groups[index]) { %}
+    <tr ref="{{ctx.datagridKey}}-group-header" class="datagrid-group-header{{ctx.hasToggle ? ' clickable' : ''}}">
+      <td
+        ref="{{ctx.datagridKey}}-group-label"
+        colspan="{{ctx.numColumns}}"
+        class="datagrid-group-label">{{ctx.groups[index].label}}</td>
+    </tr>
+    {% } %}
+    <tr ref="{{ctx.datagridKey}}-row" data-tanstack-row-id="{{row.id}}">
+      {% if (ctx.component.reorder) { %}
+        <td class="col-md-1 tanstack-datagrid-reorder-cell">
+          <button type="button" class="formio-drag-button btn btn-light" data-key="{{ctx.datagridKey}}"><span class="visually-hidden">{{ ctx.t('Reorder row') }}</span><i class="fa fa-bars"></i></button>
+        </td>
+      {% } %}
+      {% ctx.columnMetadata.forEach(function(meta) { %}
+        <td
+          ref="{{ctx.datagridKey}}"
+          data-tanstack-column-id="{{meta.id}}"
+          class="tanstack-datagrid-cell"
+          {% if (meta.size) { %}style="width: {{meta.size}}px"{% } %}>
+          {{ meta.key ? row.cells[meta.key] : '' }}
+        </td>
+      {% }) %}
+      {% if (ctx.hasExtraColumn) { %}
+        {% if (ctx.hasRemoveButtons) { %}
+        <td class="col-md-1 tanstack-datagrid-actions-cell">
+          <!-- TODO: revisit TanStack remove-row UX -->
+          <button type="button" class="btn btn-secondary formio-button-remove-row" ref="{{ctx.datagridKey}}-removeRow" tabindex="{{ctx.tabIndex}}" aria-label="{{ctx.t('remove')}}">
+            <i class="{{ctx.iconClass('remove-circle')}}"></i>
+          </button>
+        </td>
+        {% } %}
+        {% if (ctx.canAddColumn) { %}
+        <td ref="{{ctx.key}}-container" class="col-md-3">
+          {{ctx.placeholder}}
+        </td>
+        {% } %}
+      {% } %}
+    </tr>
+    {% }) %}
+  </tbody>
+  {% if (!ctx.builder && ctx.hasAddButton && ctx.hasBottomSubmit) { %}
+  <tfoot>
+    <tr>
+      <td colspan="{{ctx.component.layoutFixed ? ctx.numColumns :  ctx.numColumns + 1}}">
+        <!-- TODO: revisit TanStack add-row UX -->
+        <button class="btn btn-primary formio-button-add-row" ref="{{ctx.datagridKey}}-addRow" tabindex="{{ctx.tabIndex}}">
+          <i class="{{ctx.iconClass('plus')}}"></i> {{ctx.t(ctx.component.addAnother || 'Add Another', { _userInput: true })}}
+        </button>
+      </td>
+    </tr>
+  </tfoot>
+  {% } %}
+</table>
